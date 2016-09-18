@@ -34,7 +34,7 @@ var GameState = function(game) {
 
       // Adding the ship 
       this.ship = this.game.add.sprite(0, 0, 'ship');
-	  shipForVelocity = this.ship;
+    shipForVelocity = this.ship;
       this.ship.anchor.setTo(0.5, 0.5);
       this.ship.angle = -90; // Point the ship up
 
@@ -58,7 +58,7 @@ var GameState = function(game) {
 
      //creating  landing platform
   /*    var landingPlatform = this.game.add.sprite(400, 550, 'platform');
-	  this.game.physics.enable(landingPlatform, Phaser.Physics.ARCADE);
+    this.game.physics.enable(landingPlatform, Phaser.Physics.ARCADE);
       landingPlatform.body.immovable = true;
       landingPlatform.body.allowGravity = false;
       landingPlatform.body.collideWorldBounds = true;
@@ -98,11 +98,11 @@ var GameState = function(game) {
 
       this.game.time.advancedTiming = true;
  
-	//create text for UI
-	fuelText = game.add.text(10, 10, "Fuel: " + fuel,  { font: "20px Arial", fill: generateHexColor() });
-	elapsedTimeText = game.add.text(10, 30, "Elapsed time: " + this.game.time.totalElapsedSeconds(),  { font: "20px Arial", fill: generateHexColor() });
-	velocityXText = game.add.text(800, 10, "Horizontal Speed: " + Math.abs(this.ship.body.velocity.x),  { font: "20px Arial", fill: generateHexColor() });
-	velocityYText = game.add.text(800, 30, "Vertical Speed: " + Math.abs(this.ship.body.velocity.y),  { font: "20px Arial", fill: generateHexColor() });
+  //create text for UI
+  fuelText = game.add.text(10, 10, "Fuel: " + fuel,  { font: "20px Arial", fill: generateHexColor() });
+  elapsedTimeText = game.add.text(10, 30, "Elapsed time: " + this.game.time.totalElapsedSeconds(),  { font: "20px Arial", fill: generateHexColor() });
+  velocityXText = game.add.text(800, 10, "Horizontal Speed: " + Math.abs(this.ship.body.velocity.x),  { font: "20px Arial", fill: generateHexColor() });
+  velocityYText = game.add.text(800, 30, "Vertical Speed: " + Math.abs(this.ship.body.velocity.y),  { font: "20px Arial", fill: generateHexColor() });
 };
 
 function generateHexColor() { 
@@ -149,10 +149,10 @@ function generateHexColor() {
   };
   
   function updateUI() {
-	  this.fuelText.setText("Fuel: " + fuel);
-	  elapsedTimeText.setText("Elapsed Seconds: " + Math.trunc(this.game.time.totalElapsedSeconds()));
-	  velocityXText.setText("Horizontal Speed: " + Math.abs(Math.trunc(this.shipForVelocity.body.velocity.x)));
-	  velocityYText.setText("Vertical Speed: " + Math.abs(Math.trunc(this.shipForVelocity.body.velocity.y)));
+    this.fuelText.setText("Fuel: " + fuel);
+    elapsedTimeText.setText("Elapsed Seconds: " + Math.trunc(this.game.time.totalElapsedSeconds()));
+    velocityXText.setText("Horizontal Speed: " + Math.abs(Math.trunc(this.shipForVelocity.body.velocity.x)));
+    velocityYText.setText("Vertical Speed: " + Math.abs(Math.trunc(this.shipForVelocity.body.velocity.y)));
   }
 
   GameState.prototype.update = function() {
@@ -188,7 +188,7 @@ function generateHexColor() {
       }
 
       if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && fuel > 50 && this.game.time.totalElapsedSeconds() - spaceBarPressed >= 3) {
-      		spaceBarPressed = this.game.time.totalElapsedSeconds();
+          spaceBarPressed = this.game.time.totalElapsedSeconds();
               this.ship.body.velocity.setTo(0, -90);
               this.ship.angle = -90;
               fuel -= 50;
@@ -197,15 +197,15 @@ function generateHexColor() {
           this.ship.body.acceleration.x = Math.cos(this.ship.rotation) * this.ACCELERATION;
           this.ship.body.acceleration.y = Math.sin(this.ship.rotation) * this.ACCELERATION;
           this.ship.frame = 1;
-		  fuel -= 1;
-		  //fuelText.setText("Fuel: " + fuel);
+      fuel -= 1;
+      //fuelText.setText("Fuel: " + fuel);
       } else {
           this.ship.body.acceleration.setTo(0, 0);
 
           this.ship.frame = 0;
       }
-	  
-	  updateUI();
+    
+    updateUI();
   };
 
   var game = new Phaser.Game(1800, 1000, Phaser.AUTO, 'game');
