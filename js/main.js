@@ -10,22 +10,30 @@ RapidPrototyping.GameState = function(game) {
 var livesText;
 var livesLeft;
 var music;
+var group1;
+var group2;
+var group3;
+var numberOfBalloons = 37;
 
-  RapidPrototyping.GameState.prototype.preload = function() {
+RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
   		  this.game.load.image('playerObject','Content/Images/personObject.png');
   		  this.game.load.image('background','Content/Images/gamePlayBackground.png');
   		  this.game.load.image('ground','Content/Images/ground.png');
   		  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json');
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.mp3");
-
+  		  this.game.load.image('balloon','Content/Images/Balloon.png');
   };
 
 RapidPrototyping.GameState.prototype.create = function() {
 //				game.add.sprite(0,0,'background');
 				
-				this.GRAVITY = 30;
+
+				this.GRAVITY = 500;
 			  	game.stage.backgroundColor = "#4488AA";
+
+				game.physics.startSystem(Phaser.Physics.ARCADE);
+
 				//adding player object to screen
 				this.player = this.game.add.sprite(75,75,'playerObject');
 				this.player.anchor.setTo(0.5,0.5);
@@ -44,6 +52,8 @@ RapidPrototyping.GameState.prototype.create = function() {
  				this.player.body.allowGravity=false;
  				//this.player.body.immovable=false;
  				this.player.collideWorldBounds = true;
+ 				this.player.body.collideWorldBounds = true;
+ 				this.player.body.immovable = true;
 
 				
 				// adding ground blocks
@@ -68,16 +78,59 @@ RapidPrototyping.GameState.prototype.create = function() {
 		      	
 		      	this.person.collideWorldBounds = true;
       			//this.person.body.checkCollision.down = true;
+				this.person.y = 200;
+     			this.person.body.allowGravity=true;
+		      	this.person.body.collideWorldBounds = true;
+                this.person.body.velocity.setTo(90, 240);
       			//this.person.body.checkCollision.up = true;
-				this.person.body.bounce.setTo(1,1);
+				this.person.body.bounce.setTo(1.05);
+
+            	this.group1 = this.game.add.group();
+            	this.group2 = this.game.add.group();
+				this.group3 = this.game.add.group();
+            	var i;
+            	for (var j = 0; j < 3; j++)
+            	{	            	
+            		for (i = 0; i < numberOfBalloons; i++)
+	            	{				
+	            		this.balloon = this.game.add.sprite(75,75,'balloon');
+						this.balloon.anchor.setTo(0.5,0.5);
+						this.balloon.x= 50*i;
+						
+						
+						game.physics.enable(this.balloon,Phaser.Physics.ARCADE);
+		 				game.physics.arcade.gravity.y = this.GRAVITY;
+
+		 				this.balloon.body.allowGravity=false;
+		 				this.balloon.body.immovable = true;
+
+	                	if (j == 0)
+	                	{
+	                		this.balloon.body.velocity.setTo(100, 0);
+	                		this.balloon.y = this.balloon.height/2;
+	                		this.group1.add(this.balloon);
+	                	}
+	                	else if (j == 1)
+	                	{
+	                		this.balloon.body.velocity.setTo(-100, 0);
+	                		this.balloon.y = (this.balloon.height/2)+this.balloon.height;
+	                		this.group2.add(this.balloon);
+	                	}
+	                	else if (j == 2)
+	                	{
+	                		this.balloon.body.velocity.setTo(100, 0);
+	                		this.balloon.y = (this.balloon.height/2)+(this.balloon.height*2);
+	                		this.group3.add(this.balloon);
+	                	}
+	 				}
+	 			}
+
 
 
 				//this.game.time.advancedTiming = true;
 				// adding text to screen
 				livesLeft = 10;
-				//not working 
-				livesText= game.add.text(500,500,'LIVES LEFT : '+livesLeft, { font: "37px Arial", fill: "#4488AA" });
-
+				
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
 				music.volume=0.2;
@@ -89,9 +142,9 @@ RapidPrototyping.GameState.prototype.create = function() {
 function updateUI()
 {
 
-	//not working
-		livesText= game.add.text(10,10,'LIVES LEFT : '+livesLeft, { font: "20px Arial", fill: "#4488AA" });	
-		this.livesText.setText("Fuel: " + livesLeft);
+	//Change color
+		livesText= game.add.text(10,0,'LIVES LEFT : '+livesLeft, { font: "37px Arial", fill: "#000000" });	
+		this.livesText.setText("LIVES"+ livesLeft);
 };
 
 
@@ -102,25 +155,94 @@ function playerDead()
 		game.state.start("DeathState");
 }
 
+function dotproduct(a, b)
+{
+            return (a.x * b.x) + (a.y * b.y);
+}
+
  RapidPrototyping.GameState.prototype.update = function() {
 
-		game.physics.arcade.collide(this.person,this.player);
+		if (game.physics.arcade.collide(this.person,this.player))
+		{
+			//var addedSpeed = this.player.body.velocity.x;
+			//if (addedSpeed < 0)
+			//	addedSpeed *=-1;
+			//this.person.body.velocity.x -= addedSpeed/5;
+
+			//this.person.body.velocity.y -= addedSpeed/5;
+
+			var vector = [this.person.body.position.x - this.player.body.position.x, this.person.body.position.y - this.player.body.position.y];
+			var length = Math.sqrt((vector[0]*vector[0])+ (vector[1]*vector[1]));
+			if (length < 0)
+				length *= -1;
+
+			vector[0] /=length;
+			vector[1] /=length;
+
+			this.person.body.velocity.x *= -vector[0];
+			this.person.body.velocity.y	*= -vector[1];
+		}
+		if (game.physics.arcade.collide(this.person,this.ground))
+		{
+				this.person.body.velocity.setTo(0, 0);
+				this.person.game.physics.enable(false);
+		}
+
+
+		this.player.body.velocity.x = 0;
  		 if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT) ) {
- 			//this.player.body.velocity.setTo(-40, 0);
- 			this.player.x-=2;
+ 			this.player.body.velocity.x = -1000;
  		}
  		else if(this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
- 		  	//this.player.body.velocity.setTo(40,0);
- 		  	this.player.x+=2;
- 		  	// implement additional speed variation in game
+				this.player.body.velocity.x = 1000;
  		}
+
+ 		// this is placeholder to decide deadstate
  		else if(this.input.keyboard.isDown(Phaser.Keyboard.UP))
 		{
 			playerDead();
 		}			
  		this.person.body.velocity.y=+50;
+
+	 		for (var i = 0; i < this.group1.length; i++)
+	 		{
+	 			if (this.group1.children[i].x > game.width)
+	 			{
+	 				this.group1.children[i].x = -20;
+	 			}
+	 			if (game.physics.arcade.collide(this.person,this.group1.children[i]))
+	 			{
+	 				this.group1.remove(this.group1.children[i]);
+	 				return;
+	 			}
+	 		}
+	 		for (var i = 0; i < this.group2.length; i++)
+	 		{
+	 			if (this.group2.children[i].x < 0)
+	 			{
+	 				this.group2.children[i].x = game.width+25;
+	 			}
+
+	 			if (game.physics.arcade.collide(this.person,this.group2.children[i]))
+	 			{
+	 				this.group2.remove(this.group2.children[i]);
+	 				return;
+	 			}
+	 		}
+	 		for (var i = 0; i < this.group3.length; i++)
+	 		{
+	 			if (this.group3.children[i].x > game.width)
+	 			{
+	 				this.group3.children[i].x = -20;
+	 			}
+	 			if (game.physics.arcade.collide(this.person,this.group3.children[i]))
+	 			{
+	 				this.group3.remove(this.group3.children[i]);
+	 				return;
+	 			}
+	 		}
+
+ 		  
  		updateUI();
  }
-
-
 
