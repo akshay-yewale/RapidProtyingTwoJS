@@ -32,7 +32,7 @@ RapidPrototyping.GameTitle.prototype = {
 	}
 }
 
-var game = new Phaser.Game(1820, 820, Phaser.AUTO, 'game');
+var game = new Phaser.Game(1000, 820, Phaser.AUTO, 'game');
   game.state.add('GameTitle', RapidPrototyping.GameTitle);
   game.state.add('GameState',RapidPrototyping.GameState);
   game.state.add('DeathState',RapidPrototyping.DeathState);
