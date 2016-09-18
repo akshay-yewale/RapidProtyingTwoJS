@@ -29,10 +29,9 @@ RapidPrototyping.GameState.prototype.create = function() {
 //				game.add.sprite(0,0,'background');
 				
 
-				this.GRAVITY = 500;
-			  	game.stage.backgroundColor = "#4488AA";
-
-				game.physics.startSystem(Phaser.Physics.ARCADE);
+				this.GRAVITY = 400;
+			  	this.game.stage.backgroundColor = "#4488AA";
+				this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
 				//adding player object to screen
 				this.player = this.game.add.sprite(75,75,'playerObject');
@@ -40,18 +39,16 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.player.angle=0;
 				this.player.x= 450;
 				this.player.y = 750;
+				
 			
 				this.game.input.keyboard.addKeyCapture([
           				Phaser.Keyboard.LEFT,
-          				Phaser.Keyboard.RIGHT,
-          				Phaser.Keyboard.UP
+          				Phaser.Keyboard.RIGHT
           				]);
-				game.physics.enable(this.player,Phaser.Physics.ARCADE);
- 				game.physics.arcade.gravity.y = this.GRAVITY;
+				this.game.physics.enable(this.player,Phaser.Physics.ARCADE);
+ 				this.game.physics.arcade.gravity.y = this.GRAVITY;
 
  				this.player.body.allowGravity=false;
- 				//this.player.body.immovable=false;
- 				this.player.collideWorldBounds = true;
  				this.player.body.collideWorldBounds = true;
  				this.player.body.immovable = true;
 
@@ -70,20 +67,17 @@ RapidPrototyping.GameState.prototype.create = function() {
 				// adding persons into scene
 				this.person= game.add.sprite(75,75,'playerObject');
 				this.person.anchor.setTo(0.5,0.5);
-				game.physics.enable(this.person,Phaser.Physics.ARCADE);
+				this.game.physics.enable(this.person,Phaser.Physics.ARCADE);
 				this.person.x= 200;
-				this.person.y = 20;
-				this.person.body.immovable = false;
-     			//this.person.body.allowGravity=true;
-		      	
-		      	this.person.collideWorldBounds = true;
-      			//this.person.body.checkCollision.down = true;
 				this.person.y = 200;
+
      			this.person.body.allowGravity=true;
 		      	this.person.body.collideWorldBounds = true;
                 this.person.body.velocity.setTo(90, 240);
       			//this.person.body.checkCollision.up = true;
 				this.person.body.bounce.setTo(1.05);
+
+
 
             	this.group1 = this.game.add.group();
             	this.group2 = this.game.add.group();
@@ -126,10 +120,10 @@ RapidPrototyping.GameState.prototype.create = function() {
 	 			}
 
 
-
 				//this.game.time.advancedTiming = true;
 				// adding text to screen
 				livesLeft = 10;
+				//not working 
 				
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
@@ -155,32 +149,34 @@ function playerDead()
 		game.state.start("DeathState");
 }
 
-function dotproduct(a, b)
+function findAngle(a, b)
 {
-            return (a.x * b.x) + (a.y * b.y);
+	var vector = [a.x - b.x, a.y - b.y];
+	var length = Math.sqrt((vector[0]*vector[0])+ (vector[1]*vector[1]));
+	if (length < 0)
+		length *= -1;
+
+	vector[0] /=length;
+	vector[1] /=length;
+
+	return vector;
 }
+ function dotproduct(a,b) {
+	var n = 0, lim = Math.min(a.length,b.length);
+	for (var i = 0; i < lim; i++) n += a[i] * b[i];
+	return n;
+ }
 
  RapidPrototyping.GameState.prototype.update = function() {
 
+
+
 		if (game.physics.arcade.collide(this.person,this.player))
 		{
-			//var addedSpeed = this.player.body.velocity.x;
-			//if (addedSpeed < 0)
-			//	addedSpeed *=-1;
-			//this.person.body.velocity.x -= addedSpeed/5;
+			var vector = findAngle(this.person.body.position, this.player.body.position);
+			this.person.body.velocity.x *= vector[0]*2;
+			//this.person.body.velocity.y	*= -vector[1];
 
-			//this.person.body.velocity.y -= addedSpeed/5;
-
-			var vector = [this.person.body.position.x - this.player.body.position.x, this.person.body.position.y - this.player.body.position.y];
-			var length = Math.sqrt((vector[0]*vector[0])+ (vector[1]*vector[1]));
-			if (length < 0)
-				length *= -1;
-
-			vector[0] /=length;
-			vector[1] /=length;
-
-			this.person.body.velocity.x *= -vector[0];
-			this.person.body.velocity.y	*= -vector[1];
 		}
 		if (game.physics.arcade.collide(this.person,this.ground))
 		{
@@ -191,56 +187,67 @@ function dotproduct(a, b)
 
 		this.player.body.velocity.x = 0;
  		 if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT) ) {
- 			this.player.body.velocity.x = -1000;
+ 			this.player.body.velocity.x = -1500;
  		}
  		else if(this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
-				this.player.body.velocity.x = 1000;
+				this.player.body.velocity.x = 1500;
  		}
-
- 		// this is placeholder to decide deadstate
  		else if(this.input.keyboard.isDown(Phaser.Keyboard.UP))
 		{
 			playerDead();
-		}			
- 		this.person.body.velocity.y=+50;
+		}	
 
-	 		for (var i = 0; i < this.group1.length; i++)
-	 		{
-	 			if (this.group1.children[i].x > game.width)
-	 			{
-	 				this.group1.children[i].x = -20;
-	 			}
-	 			if (game.physics.arcade.collide(this.person,this.group1.children[i]))
-	 			{
-	 				this.group1.remove(this.group1.children[i]);
-	 				return;
-	 			}
-	 		}
-	 		for (var i = 0; i < this.group2.length; i++)
-	 		{
-	 			if (this.group2.children[i].x < 0)
-	 			{
-	 				this.group2.children[i].x = game.width+25;
-	 			}
+ 		for (var i = 0; i < this.group1.length; i++)
+ 		{
+ 			if (this.group1.children[i].x > game.width)
+ 			{
+ 				this.group1.children[i].x = -20;
+ 			}
+ 			if (game.physics.arcade.collide(this.person,this.group1.children[i]))
+ 			{
+ 				var vector = findAngle(this.person.body.position, this.group1.children[i].position);
+				this.person.body.velocity.x *= vector[0]*10;
+				this.person.body.velocity.y	*= vector[1];
+ 				this.group1.remove(this.group1.children[i]);
+ 				return;
+ 			}
+ 		}
+ 		for (var i = 0; i < this.group2.length; i++)
+ 		{
+ 			if (this.group2.children[i].x < 0)
+ 			{
+ 				this.group2.children[i].x = game.width+25;
+ 			}
 
-	 			if (game.physics.arcade.collide(this.person,this.group2.children[i]))
-	 			{
-	 				this.group2.remove(this.group2.children[i]);
-	 				return;
-	 			}
-	 		}
-	 		for (var i = 0; i < this.group3.length; i++)
-	 		{
-	 			if (this.group3.children[i].x > game.width)
-	 			{
-	 				this.group3.children[i].x = -20;
-	 			}
-	 			if (game.physics.arcade.collide(this.person,this.group3.children[i]))
-	 			{
-	 				this.group3.remove(this.group3.children[i]);
-	 				return;
-	 			}
-	 		}
+ 			if (game.physics.arcade.collide(this.person,this.group2.children[i]))
+ 			{
+ 				var vector = findAngle(this.person.body.position, this.group2.children[i].position);
+				this.person.body.velocity.x *= vector[0]*10;
+				this.person.body.velocity.y	*= vector[1];
+ 				this.group2.remove(this.group2.children[i]);
+ 				return;
+ 			}
+ 		}
+ 		for (var i = 0; i < this.group3.length; i++)
+ 		{
+ 			if (this.group3.children[i].x > game.width)
+ 			{
+ 				this.group3.children[i].x = -20;
+ 			}
+ 			if (game.physics.arcade.collide(this.person,this.group3.children[i]))
+ 			{
+ 				var vector = findAngle(this.person.body.position, this.group3.children[i].position);
+				this.person.body.velocity.x *= vector[0]*10;
+				this.person.body.velocity.y	*= vector[1];
+ 				this.group3.remove(this.group3.children[i]);
+ 				return;
+ 			}
+ 		}
+
+ 		if (this.person.body.velocity.x > 1500)
+ 			this.person.body.velocity.x = 1500;
+ 		if (this.person.body.velocity.y > 1500)
+ 			this.person.body.velocity.y = 1500;
 
  		  
  		updateUI();
