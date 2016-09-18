@@ -24,6 +24,7 @@ var numberOfBalloons = 37;
 GameState.prototype.create = function() {
 //				game.add.sprite(0,0,'background');
 				
+
 				this.GRAVITY = 500;
 			  	game.stage.backgroundColor = "#4488AA";
 				game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -115,6 +116,7 @@ GameState.prototype.create = function() {
 	 			}
 
 
+
 				//this.game.time.advancedTiming = true;
 				// adding text to screen
 				livesLeft = 10;
@@ -132,6 +134,11 @@ function updateUI()
 		this.livesText.setText("Fuel: " + livesLeft);
 
 };
+
+function dotproduct(a, b)
+{
+            return (a.x * b.x) + (a.y * b.y);
+}
 
  GameState.prototype.update = function() {
 
@@ -154,7 +161,6 @@ function updateUI()
 
 			this.person.body.velocity.x *= -vector[0];
 			this.person.body.velocity.y	*= -vector[1];
-
 		}
 		if (game.physics.arcade.collide(this.person,this.ground))
 		{
