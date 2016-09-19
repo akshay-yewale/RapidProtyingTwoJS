@@ -17,7 +17,7 @@ var left;
 var right;
 var personAlive;
 
-var numberOfBalloons = 37;
+var numberOfBalloons = 21;
 
 RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
@@ -148,7 +148,7 @@ function updateUI()
 
 	//Change color
 		livesText= game.add.text(10,0,'LIVES LEFT : '+livesLeft, { font: "37px Arial", fill: "#000000" });	
-		this.livesText.setText("LIVES"+ livesLeft);
+		this.livesText.setText("LIVES: "+ livesLeft);
 };
 
 
@@ -228,7 +228,7 @@ function findAngle(a, b)
  			if (game.physics.arcade.collide(this.person,this.group1.children[i]))
  			{
  				var vector = findAngle(this.person.body.position, this.group1.children[i].position);
-				this.person.body.velocity.x *= vector[0]*10;
+				this.person.body.velocity.x *= vector[0];
 				this.person.body.velocity.y	*= vector[1];
  				this.group1.remove(this.group1.children[i]);
  				return;
@@ -244,7 +244,7 @@ function findAngle(a, b)
  			if (game.physics.arcade.collide(this.person,this.group2.children[i]))
  			{
  				var vector = findAngle(this.person.body.position, this.group2.children[i].position);
-				this.person.body.velocity.x *= vector[0]*10;
+				this.person.body.velocity.x *= vector[0];
 				this.person.body.velocity.y	*= vector[1];
  				this.group2.remove(this.group2.children[i]);
  				return;
@@ -259,7 +259,7 @@ function findAngle(a, b)
  			if (game.physics.arcade.collide(this.person,this.group3.children[i]))
  			{
  				var vector = findAngle(this.person.body.position, this.group3.children[i].position);
-				this.person.body.velocity.x *= vector[0]*10;
+				this.person.body.velocity.x *= vector[0];
 				this.person.body.velocity.y	*= vector[1];
  				this.group3.remove(this.group3.children[i]);
  				return;
