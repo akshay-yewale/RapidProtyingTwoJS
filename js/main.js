@@ -18,6 +18,7 @@ var anim;
 var right;
 var personAlive;
 
+
 var rotatingSpeed;
 var rotating = false;
 var numberOfBalloons = 37;
@@ -258,6 +259,7 @@ this.player.body.velocity.x = 0;
 		}
 		if (game.physics.arcade.collide(this.person,this.group1.children[i]))
 		{
+
 			var vector = findAngle(this.person.body.position, this.group1.children[i].position);
 			this.person.body.velocity.x *= vector[0];
 			this.group1.remove(this.group1.children[i]);
@@ -270,6 +272,7 @@ this.player.body.velocity.x = 0;
 		if (this.group2.children[i].x < 0)
 		{
 			this.group2.children[i].x = game.width+25;
+
 		}
 
 		if (game.physics.arcade.collide(this.person,this.group2.children[i]))
