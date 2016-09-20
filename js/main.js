@@ -31,13 +31,15 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
   		  this.game.load.image('balloon','Content/Images/Balloon.png');
+  		  this.game.load.image('tower', 'Content/Images/abandon_chinese_tower.png');\
+  		  this.game.load.image('tower2', 'Content/Images/abandon_chinese_tower.png');
   };
 
 RapidPrototyping.GameState.prototype.create = function() {
 //				game.add.sprite(0,0,'background');
 				console.log("Adding GameState. create");
 
-				this.GRAVITY = 400;
+				this.GRAVITY = 500;
 			  	this.game.stage.backgroundColor = "#4488AA";
 				this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -76,6 +78,32 @@ RapidPrototyping.GameState.prototype.create = function() {
 	          		groundBlock.body.allowGravity = false;
           	   		this.ground.add(groundBlock);
       			}
+
+      			this.tower = this.game.add.sprite(0,0,'tower',1);
+				this.tower.scale.set(1);
+				this.tower.anchor.setTo(0.5,0.5);
+				this.tower.angle=0;
+				this.tower.x= 50;
+				this.tower.y = 450;
+
+				this.game.physics.enable(this.tower,Phaser.Physics.ARCADE);
+ 				this.game.physics.arcade.gravity.y = this.GRAVITY;
+
+ 				this.tower.body.allowGravity=false;
+ 				this.tower.body.immovable = true;
+
+ 				this.tower2 = this.game.add.sprite(0,0,'tower2',1);
+				this.tower2.scale.set(1);
+				this.tower2.anchor.setTo(0.5,0.5);
+				this.tower2.angle=0;
+				this.tower2.x= 1750;
+				this.tower2.y = 450;
+
+				this.game.physics.enable(this.tower2,Phaser.Physics.ARCADE);
+ 				this.game.physics.arcade.gravity.y = this.GRAVITY;
+
+ 				this.tower2.body.allowGravity=false;
+ 				this.tower2.body.immovable = true;
 
 				// adding persons into scene
 				this.person= game.add.sprite(0,0,'personObject',1);
@@ -177,7 +205,10 @@ function findAngle(a, b)
 
  RapidPrototyping.GameState.prototype.update = function() {
 
- 		
+ 	game.physics.arcade.collide(this.person,this.tower);
+	game.physics.arcade.collide(this.person,this.tower2);
+	game.physics.arcade.collide(this.tower,this.player);
+	game.physics.arcade.collide(this.tower2,this.player);
 
 		if (game.physics.arcade.collide(this.person,this.player))
 		{
