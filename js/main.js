@@ -14,6 +14,7 @@ var group1;
 var group2;
 var group3;
 var left;
+var anim;
 var right;
 var personAlive;
 
@@ -23,8 +24,9 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
   		  //this.game.load.image('playerObject','Content/Images/personObject.png');
 
-  		  this.game.load.spritesheet('playerObject','Content/Images/personAnimation.png.',64,64,4); 
+  		  this.game.load.spritesheet('playerObject','Content/Images/playerSpritePNG.png.',315,64,4); 
   		  // add person object sprite
+  		  this.game.load.spritesheet('personObject','Content/Images/personAnimation.png.',64,64,4); 
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
@@ -41,17 +43,16 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 				//adding player object to screen
 				this.player = this.game.add.sprite(0,0,'playerObject',1);
-				this.player.scale.set(4);
+				this.player.scale.set(1.1);
 				this.player.anchor.setTo(0.5,0.5);
 				this.player.angle=0;
 				this.player.x= 450;
-				this.player.y = 750;
+				this.player.y = 820;
 				
 			
 				left =this.player.animations.add('left',[1,2,3,4,5,6,7,8],8,true);				
-				right =this.player.animations.add('right',[6,7,8],8,true);
 				left.enableUpdate = true;
-    			right.enableUpdate = true;
+    			
 
 				this.game.input.keyboard.addKeyCapture([
           				Phaser.Keyboard.LEFT,
@@ -77,7 +78,8 @@ RapidPrototyping.GameState.prototype.create = function() {
       			}
 
 				// adding persons into scene
-				this.person= game.add.sprite(75,75,'playerObject');
+				this.person= game.add.sprite(0,0,'personObject',1);
+				this.person.scale.set(1);
 				this.person.anchor.setTo(0.5,0.5);
 				this.game.physics.enable(this.person,Phaser.Physics.ARCADE);
 				this.person.x= 900;
@@ -88,6 +90,8 @@ RapidPrototyping.GameState.prototype.create = function() {
                 this.person.body.velocity.setTo(90, 240);
       			//this.person.body.checkCollision.up = true;
 				this.person.body.bounce.setTo(1.05);
+				anim =this.person.animations.add('anim',[1,2,3,4,5,6,7,8],8,true);
+				anim.enableUpdate=true;
 				personAlive = true;
 
 
@@ -173,11 +177,13 @@ function findAngle(a, b)
 
  RapidPrototyping.GameState.prototype.update = function() {
 
+ 		
 
 		if (game.physics.arcade.collide(this.person,this.player))
 		{
 			var vector = findAngle(this.person.body.position, this.player.body.position);
 			this.person.body.velocity.x *= vector[0]*2;
+			this.person.animations.play("anim");
 		}
 		if (game.physics.arcade.collide(this.person,this.ground))
 		{
@@ -201,11 +207,7 @@ function findAngle(a, b)
  				this.player.play('left');
  			}
  	
- 		else if(this.input.keyboard.isDown(Phaser.Keyboard.UP))
-		{
-			this.player.animations.stop();
-			playerDead();
-		}	
+
 
  		for (var i = 0; i < this.group1.length; i++)
  		{
@@ -253,14 +255,11 @@ function findAngle(a, b)
  				return;
  			}
  		}
-
- 	
-
  		if (this.person.body.velocity.x > 1500)
  				this.person.body.velocity.x = 1500;
  		if (this.person.body.velocity.y > 1500)
  			this.person.body.velocity.y = 1500;
-
+ 		
  		this.livesText.setText("LIVES: "+ livesLeft);
  }
 
