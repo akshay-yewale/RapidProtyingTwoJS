@@ -22,11 +22,11 @@ var numberOfBalloons = 21;
 RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
   		  //this.game.load.image('playerObject','Content/Images/personObject.png');
-  		  this.game.load.spritesheet('playerObject','Content/Images/playerSpritePNG.png.',37,45,18); 
+  		  this.game.load.spritesheet('playerObject','Content/Images/personAnimation.png.',64,64,4); 
   		  this.game.load.image('background','Content/Images/gamePlayBackground.png');
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json');
-  		  this.game.load.spritesheet('player')
+  		  
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
   		  this.game.load.image('balloon','Content/Images/Balloon.png');
   };
@@ -40,7 +40,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
 				//adding player object to screen
-				this.player = this.game.add.sprite(75,75,'playerObject',1);
+				this.player = this.game.add.sprite(0,0,'playerObject',1);
 				this.player.scale.set(4);
 				this.player.anchor.setTo(0.5,0.5);
 				this.player.angle=0;
@@ -48,8 +48,8 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.player.y = 750;
 				
 			
-				left =this.player.animations.add('left',[1,2,3,4],10,true);				
-				right =this.player.animations.add('right',[6,7,8],10,true);
+				left =this.player.animations.add('left',[1,2,3,4,5,6,7,8],8,true);				
+				right =this.player.animations.add('right',[6,7,8],8,true);
 				left.enableUpdate = true;
     			right.enableUpdate = true;
 
@@ -210,7 +210,7 @@ function findAngle(a, b)
  		}
  		else if(this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 				this.player.body.velocity.x = 1500;
- 				this.player.play('right');
+ 				this.player.play('left');
  			}
  	
  		else if(this.input.keyboard.isDown(Phaser.Keyboard.UP))
