@@ -22,11 +22,11 @@ var numberOfBalloons = 21;
 RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
   		  //this.game.load.image('playerObject','Content/Images/personObject.png');
+
   		  this.game.load.spritesheet('playerObject','Content/Images/personAnimation.png.',64,64,4); 
-  		  this.game.load.image('background','Content/Images/gamePlayBackground.png');
+  		  // add person object sprite
   		  this.game.load.image('ground','Content/Images/ground.png');
-  		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json');
-  		  
+  		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
   		  this.game.load.image('balloon','Content/Images/Balloon.png');
   };
@@ -132,7 +132,8 @@ RapidPrototyping.GameState.prototype.create = function() {
 	 			}
 
 
-				//this.game.time.advancedTiming = true;
+				this.livesText = this.game.add.text(10,10, "LIVES: 3");
+				this.livesText.anchor.setTo(0.5, 0.5);
 				//adding text to screen
 				livesLeft = 3;	
 				music= game.add.audio("backgrdSound");
@@ -142,14 +143,6 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 };
 
-
-function updateUI()
-{
-
-	//Change color
-		livesText= game.add.text(10,0,'LIVES LEFT : '+livesLeft, { font: "37px Arial", fill: "#000000" });	
-		this.livesText.setText("LIVES: "+ livesLeft);
-};
 
 
 function playerDead()
@@ -185,14 +178,9 @@ function findAngle(a, b)
 		{
 			var vector = findAngle(this.person.body.position, this.player.body.position);
 			this.person.body.velocity.x *= vector[0]*2;
-			//this.person.body.velocity.y	*= -vector[1];
-
 		}
 		if (game.physics.arcade.collide(this.person,this.ground))
 		{
-				//this.person.body.velocity.setTo(0, 0);
-				
-
 				this.person.x= this.game.world.randomX;
 				this.person.y = 200;
 				this.person.body.velocity.setTo(90, 150);
@@ -273,7 +261,6 @@ function findAngle(a, b)
  		if (this.person.body.velocity.y > 1500)
  			this.person.body.velocity.y = 1500;
 
- 		  
- 		updateUI();
+ 		this.livesText.setText("LIVES: "+ livesLeft);
  }
 
