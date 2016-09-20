@@ -23,7 +23,7 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
   		  //this.game.load.image('playerObject','Content/Images/personObject.png');
   		  this.game.load.spritesheet('playerObject','Content/Images/playerSpritePNG.png.',37,45,18); 
-  		  this.game.load.image('background','Content/Images/gamePlayBackground.png');
+  		  this.game.load.image('background','Content/Images/playerSpritePNG.png');
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json');
   		  this.game.load.spritesheet('player')
