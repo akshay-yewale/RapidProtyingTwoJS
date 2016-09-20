@@ -18,7 +18,7 @@ RapidPrototyping.DeathState.prototype = {
   	create: function(){
   		console.log("%cStarting game title", "color:white; background:red");
 		this.add.image(0,0,"deathScreenBckgrd");
-  		var replayButton = this.add.button(160,320,"replaybutton",this.replayTheGame,this);
+  		var replayButton = this.add.button(900,720,"replaybutton",this.replayTheGame,this);
 		replayButton.anchor.setTo(0.5,0.5);
 		music= game.add.audio("deathSound");
 				music.volume=0.5;
