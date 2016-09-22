@@ -38,19 +38,21 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		  this.game.load.spritesheet('playerObject','Content/Images/playerSpritePNG.png.',320,64,4); 
   		  // add person object sprite
   		  this.game.load.spritesheet('personObject','Content/Images/personAnimation.png.',64,64,4); 
+  		  this.game.load.spritesheet('fireFighter', 'Content/Images/SpriteSheets/Firefighters/Firefighters_AllSprites_150x64.png', 150, 64, 6);
+
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
   		  this.game.load.image('balloon','Content/Images/Balloon.png');
-  		  this.game.load.image('tower', 'Content/Images/abandon_chinese_tower.png');
-  		  this.game.load.image('tower2', 'Content/Images/abandon_chinese_tower.png');
+  		  this.game.load.image('tower', 'Content/Images/Buildings/Apartment.png');
+  		  this.game.load.image('tower2', 'Content/Images/Buildings/Apartment.png');
   };
 
 RapidPrototyping.GameState.prototype.create = function() {
 //				game.add.sprite(0,0,'background');
 				console.log("Adding GameState. create");
 
-				this.GRAVITY = 500;
+				this.GRAVITY = 200;
 			  	this.game.stage.backgroundColor = "#4488AA";
 				this.game.physics.startSystem(Phaser.Physics.P2JS);
 				this.game.physics.p2.restitution = 1;
@@ -78,14 +80,15 @@ RapidPrototyping.GameState.prototype.create = function() {
           	   		this.ground.add(groundBlock);
       			}
 				//adding player object to screen
-				this.player = this.game.add.sprite(0,0,'playerObject',1);
+				this.player = this.game.add.sprite(0,0,'fireFighter',1);
 				this.player.scale.set(1.1);
 				this.player.anchor.setTo(0.5,0.5);
 				this.player.angle=0;
 				this.player.x= 800;
 				this.player.y = 800;
-				//this.player.animations.add('left',[1,2,3,4,5,6,7,8],8,true);				
-				//this.player.animations.play('left');
+				this.player.animations.add('idle',[0,1],2, true);
+				this.player.animations.add('left', [2,3], 2, true);
+				this.player.animations.add('right', [4,5], 2, true);	
 				this.game.input.keyboard.addKeyCapture([
           				Phaser.Keyboard.LEFT,
           				Phaser.Keyboard.RIGHT
@@ -98,9 +101,9 @@ RapidPrototyping.GameState.prototype.create = function() {
  				this.player.body.collideWorldBounds = true;
  				this.player.body.kinematic = true;
 				this.player.body.drag = 0.1;
-				this.player.body.setRectangle(320, 320, 0, 160);
+				this.player.body.setRectangle(150, 10, 0, 10);
 				this.player.body.setCollisionGroup(playerCollisionGroup);
-				this.player.body.collides(personCollisionGroup);
+				this.player.body.collides([personCollisionGroup, towerCollisionGroup]);
 
       			this.tower = this.game.add.sprite(0,0,'tower',1);
       			this.tower.enableBody = true;
@@ -136,7 +139,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 		      	this.person.body.collideWorldBounds = true;
                 this.person.body.velocity.x = 90;
-                this.person.body.velocity.y = -200;
+                this.person.body.velocity.y = -100;
                 this.person.body.setCollisionGroup(personCollisionGroup);
                 this.person.body.collides([playerCollisionGroup, towerCollisionGroup]);
                 this.person.body.collides(groundCollisionGroup, null, this);
@@ -220,7 +223,6 @@ function loseLife(ground, person)
 	person.sprite.body.enable = true;
 	person.sprite.body.velocity.x = 90;
 	person.sprite.body.velocity.y = -200;
-
 	//livesLeft = livesLeft-1;
 	//if(livesLeft==0)
 		//playerDead();
@@ -261,24 +263,25 @@ function findAngle(a, b)
 	 if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT) && !Phaser.Rectangle.intersects(this.player, this.tower)) {
 		
 		this.player.body.moveLeft(1000);
-		this.player.play('left');
+		this.player.animations.play('left', 10, true);
 
-			this.player.body.angle= -45;
+		//this.player.body.setRectangle(150, 10, 0, 10, );
 
 		this.direction = -1;
 	}
 	else if(this.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && !Phaser.Rectangle.intersects(this.player, this.tower2)){
 		
 		this.player.body.moveRight(1000);
-		this.player.play('left');
+		this.player.animations.play('right', 10, true);
 
-		this.player.body.angle= 45;
+		//this.player.body.angle= 45;
 		this.direction = 1;
 	}
 	else
 	{
 		this.direction = 0;
 		this.player.body.angle = 0;
+		this.player.animations.play('idle');
 	}
 
 	for (var i = 0; i < this.group1.length; i++)
