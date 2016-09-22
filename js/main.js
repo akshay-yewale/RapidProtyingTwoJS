@@ -68,6 +68,7 @@ RapidPrototyping.GameState.prototype.create = function() {
       			for(var x = 0; x < this.game.width; x += 32) {
           		// Creating multiple ground blocks, and enabling physics on each of them.
           			var groundBlock = this.game.add.sprite(x, this.game.height - 32, 'ground');
+
           			this.game.physics.p2.enable(groundBlock);
           			groundBlock.body.kinematic = true;
 	          		groundBlock.body.immovable = true;
@@ -76,7 +77,6 @@ RapidPrototyping.GameState.prototype.create = function() {
 	          		groundBlock.body.collides(personCollisionGroup, loseLife, this);
           	   		this.ground.add(groundBlock);
       			}
-
 				//adding player object to screen
 				this.player = this.game.add.sprite(0,0,'playerObject',1);
 				this.player.scale.set(1.1);
@@ -86,13 +86,13 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.player.y = 800;
 				//this.player.animations.add('left',[1,2,3,4,5,6,7,8],8,true);				
 				//this.player.animations.play('left');
-    		
 				this.game.input.keyboard.addKeyCapture([
           				Phaser.Keyboard.LEFT,
           				Phaser.Keyboard.RIGHT
           				]);
 				this.game.physics.p2.enable(this.player, true);
  				this.game.physics.p2.gravity.y = this.GRAVITY*2;
+
 
  				this.player.enableBody = true;
  				this.player.body.collideWorldBounds = true;
@@ -111,13 +111,14 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.tower.angle=0;
 				this.tower.body.kinematic = true;
 				this.tower.body.setCollisionGroup(towerCollisionGroup);
-				this.tower.body.collides([personCollisionGroup, playerCollisionGroup]);	
+				this.tower.body.collides([personCollisionGroup, playerCollisionGroup]);
 
  				this.tower2 = this.game.add.sprite(0,0,'tower2',1);
  				this.tower2.enableBody = true;
  				this.tower2.x= 1750;
 				this.tower2.y = 450;	
 				this.tower2.anchor.setTo(0.5,0.5);
+
 				this.tower2.angle=0;	
 				this.game.physics.p2.enable(this.tower2);
 				this.tower2.body.kinematic = true;
@@ -255,6 +256,7 @@ function findAngle(a, b)
 
  	game.debug.body(this.player); 	game.debug.body(this.person);
 
+
 	this.player.body.velocity.x = 0;
 	 if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT) && !Phaser.Rectangle.intersects(this.player, this.tower)) {
 		
@@ -342,6 +344,5 @@ function findAngle(a, b)
 		this.person.body.velocity.y = 1500;
 	
 	this.livesText.setText("LIVES: "+ livesLeft);
-
  }
 
