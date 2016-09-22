@@ -18,6 +18,7 @@ var anim;
 var right;
 var personAlive;
 
+
 var rotatingSpeed;
 var rotating = false;
 var numberOfBalloons = 37;
@@ -66,6 +67,8 @@ RapidPrototyping.GameState.prototype.create = function() {
       			}
 
       			this.game.physics.startSystem(Phaser.Physics.P2JS);
+
+      			}
 				//adding player object to screen
 				this.player = this.game.add.sprite(0,0,'playerObject',1);
 				this.player.scale.set(1.1);
@@ -76,6 +79,11 @@ RapidPrototyping.GameState.prototype.create = function() {
 				//this.player.animations.add('left',[1,2,3,4,5,6,7,8],8,true);				
 				//this.player.animations.play('left');
     		
+				
+			
+				//left =this.player.animations.add('left',[1,2,3,4,5,6,7,8],8,true);				
+				//left.enableUpdate = true;
+    			
 				this.game.input.keyboard.addKeyCapture([
           				Phaser.Keyboard.LEFT,
           				Phaser.Keyboard.RIGHT
@@ -84,6 +92,7 @@ RapidPrototyping.GameState.prototype.create = function() {
  				this.game.physics.p2.gravity.y = this.GRAVITY*2;
  				this.player.enableBody = true;
  				this.player.body.collideWorldBounds = true;
+
  				this.player.body.kinematic = true;
 				this.player.body.drag = 0.1;
 
@@ -116,7 +125,9 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.person.scale.set(1);
 				this.person.anchor.setTo(0.5,0.5);
 				this.game.physics.enable(this.person,Phaser.Physics.ARCADE);
+
 				//this.game.physics.p2.enable(this.person, true);
+
 				this.person.x= 300;
 				this.person.y = 200;
 
@@ -126,6 +137,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.person.body.bounce.setTo(1.1);
 				//anim =this.person.animations.add('anim',[1,2,3,4,5,6,7,8],8,true);
 				//anim.enableUpdate=true;
+
 				personAlive = true;
 				rotatingSpeed = 10;
 
@@ -386,6 +398,5 @@ function findAngle(a, b)
 		this.person.body.velocity.y = 1500;
 	
 	//this.livesText.setText("LIVES: "+ livesLeft);
-
  }
 
