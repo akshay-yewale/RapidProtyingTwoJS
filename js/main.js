@@ -48,7 +48,7 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		  this.game.load.physics('player_physicsRight', 'Content/Images/SpriteSheets/Firefighters/fireFighterRight.json')
 // add person object sprite
   		  this.game.load.spritesheet('personObject','Content/Images/business_peep.png.',64,64,1); 
-  		  this.game.load.spritesheet('Firefighters_AllSprites_150x64', 'Content/Images/SpriteSheets/Firefighters/Firefighters_AllSprites_150x64.png', 150, 64, 6);
+  		  this.game.load.spritesheet('Firefighters_Idle2_180x65', 'Content/Images/SpriteSheets/Firefighters/Firefighters_Idle2_180x65.png', 180, 65, 6);
 
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
@@ -90,7 +90,7 @@ RapidPrototyping.GameState.prototype.create = function() {
           	   		this.ground.add(groundBlock);
       			}
 				//adding player object to screen
-				this.player = this.game.add.sprite(0,0,'Firefighters_AllSprites_150x64',1);
+				this.player = this.game.add.sprite(0,0,'Firefighters_Idle2_180x65',1);
 				this.player.scale.set(1.1);
 				this.player.anchor.setTo(0.5,0.5);
 				this.player.angle=0;
@@ -98,8 +98,8 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.player.y = 800;
 				this.player.scale.set(1);
 				this.player.animations.add('idle',[0,1],2, true);
-				this.player.animations.add('left', [2,3], 2, true);
-				this.player.animations.add('right', [4,5], 2, true);	
+				//this.player.animations.add('left', [2,3], 2, true);
+				//this.player.animations.add('right', [4,5], 2, true);	
 				this.game.input.keyboard.addKeyCapture([
           				Phaser.Keyboard.LEFT,
           				Phaser.Keyboard.RIGHT
@@ -112,8 +112,8 @@ RapidPrototyping.GameState.prototype.create = function() {
  				this.player.body.collideWorldBounds = true;
  				this.player.body.kinematic = true;
 				this.player.body.drag = 0.1;
-				this.player.body.clearShapes();
-				this.player.body.loadPolygon('player_physicsIdle', 'Firefighters_AllSprites_150x64');
+				//this.player.body.clearShapes();
+				//this.player.body.loadPolygon('player_physicsIdle', 'Firefighters_Idle2_180x65');
 				//this.player.body.setRectangle(200, 50, 0, 10);
 				this.player.body.setCollisionGroup(this.playerCollisionGroup);
 				this.player.body.collides([this.personCollisionGroup, this.towerCollisionGroup]);
@@ -303,7 +303,7 @@ function findAngle(a, b)
 	 if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT) && !Phaser.Rectangle.intersects(this.player, this.tower)) {
 		
 		this.player.body.moveLeft(1000);
-		this.player.animations.play('left', 10, true);
+		//this.player.animations.play('left', 10, true);
 		this.player.body.angle = -45;
 		//this.player.body.clearShapes();
 		//this.player.body.loadPolygon('player_physicsLeft', 'Firefighters_AllSprites_150x64');
@@ -315,7 +315,7 @@ function findAngle(a, b)
 	else if(this.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && !Phaser.Rectangle.intersects(this.player, this.tower2)){
 		
 		this.player.body.moveRight(1000);
-		this.player.animations.play('right', 10, true);
+		//this.player.animations.play('right', 10, true);
 		this.player.body.angle = 45;
 		//this.player.body.clearShapes();
 		//this.player.body.loadPolygon('player_physicsRight', 'Firefighters_AllSprites_150x64');
