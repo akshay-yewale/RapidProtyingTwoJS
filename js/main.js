@@ -34,7 +34,7 @@ var tower;
 var tower2;
 var balloon;
 var ambulance;
-var wing;
+var wingsOfFreedom;
 var personCollisionGroup;
 var direction;
 var haveLeftPlayerHitbox;
@@ -67,6 +67,7 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		  this.game.load.image('tower2', 'Content/Images/Buildings/Apartment.png');
   		  this.game.load.spritesheet('ambulance','Content/Images/SpriteSheets/Ambulance/ambulance.png',256,256,10);
   		  this.game.load.spritesheet('helicopter','Content/Images/SpriteSheets/Helicopter/helicopter.png',256,256,1);
+  		  this.game.load.spritesheet('wingsOfFreedom','');
   };
 
 RapidPrototyping.GameState.prototype.create = function() {
