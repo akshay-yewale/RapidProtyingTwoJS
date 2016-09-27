@@ -176,7 +176,8 @@ RapidPrototyping.GameState.prototype.create = function() {
                 this.person.body.collides(this.balloonCollisionGroup, hitBalloon,this);
                 this.person.body.collides(this.ambulanceCollisionGroup,null,this);
                 this.person.body.collides(this.helicopterCollisionGroup,null,this);
-                
+                this.person.body.collides(this.personCollisionGroup,null,this);
+                this.groupPerson.add(this.person);
 				//anim =this.person.animations.add('anim',[1,2,3,4,5,6,7,8],8,true);
 				//anim.enableUpdate=true;
 
@@ -279,10 +280,10 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.game.time.events.loop(Phaser.Timer.SECOND*20, spawnAmbulance, this);
 				this.game.time.events.loop(Phaser.Timer.SECOND*45,	spawnHelicopter,this);
 
-				this.livesText = this.game.add.text(10,10, "LIVES: 3");
+				this.livesText = this.game.add.text(10,10, "LIVES: 10");
 				this.livesText.anchor.setTo(0, 0);
 				//adding text to screen
-				livesLeft = 3;	
+				livesLeft = 10;	
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
 				music.volume=0.3;
@@ -292,7 +293,7 @@ RapidPrototyping.GameState.prototype.create = function() {
  				console.log(this.player.body.debug);
 
 				//Activate for more people!
-				//.game.time.events.add(Phaser.Timer.SECOND * 10, makeNewPerson, this);
+				this.game.time.events.add(Phaser.Timer.SECOND * 10, makeNewPerson, this);
  	//console.log(this.person.body.debug);
 };
 
@@ -323,8 +324,12 @@ function makeNewPerson()
     this.person.body.velocity.x = 90;
     this.person.body.velocity.y = -100;
     this.person.body.setCollisionGroup(this.personCollisionGroup);
-    this.person.body.collides([this.playerCollisionGroup, this.towerCollisionGroup]);
-    this.person.body.collides(this.groundCollisionGroup, null, this);
+    this.person.body.collides([this.playerCollisionGroup, this.towerCollisionGroup,this.ambulanceCollisionGroup,this.helicopterCollisionGroup]);
+    this.person.body.collides(this.groundCollisionGroup, null,this);
+    this.person.body.collides(this.balloonCollisionGroup, hitBalloon,this);
+    this.person.body.collides(this.ambulanceCollisionGroup,null,this);
+    this.person.body.collides(this.helicopterCollisionGroup,null,this);
+    this.person.body.collides(this.personCollisionGroup,null,this);
     this.person.body.collides(this.balloonCollisionGroup, hitBalloon, this);
 
 	this.groupPerson.add(this.person);
