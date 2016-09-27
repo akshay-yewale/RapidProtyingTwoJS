@@ -294,8 +294,6 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 				game.physics.p2.setImpactEvents(true);
  				console.log(this.player.body.debug);
-
-
  	//console.log(this.person.body.debug);
 };
 
