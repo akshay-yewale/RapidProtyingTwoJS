@@ -50,7 +50,7 @@ var helicopterCollisionGroup;
 RapidPrototyping.GameState.prototype.preload = function() {
   		console.log("Adding GameState. preload");
   		  //this.game.load.image('playerObject','Content/Images/personObject.png');
-
+  		  this.game.load.image('backgroundImage','Content/Images/backgroundImage.png')
   		  this.game.load.spritesheet('playerObject','Content/Images/playerSpritePNG.png.',320,64,4);
   		  this.game.load.physics('player_physicsIdle', 'Content/Images/SpriteSheets/Firefighters/fireFighterIdle.json')
   		  this.game.load.physics('player_physicsLeft', 'Content/Images/SpriteSheets/Firefighters/fireFighterLeft.json')
@@ -75,7 +75,11 @@ RapidPrototyping.GameState.prototype.create = function() {
 				console.log("Adding GameState. create");
 
 				this.GRAVITY = 200;
-			  	this.game.stage.backgroundColor = "#4488AA";
+			  	//this.game.stage.backgroundColor = "#4488AA";
+
+			  	this.backgroundImage = this.game.add.sprite(0,0,'backgroundImage',1);
+			  	this.backgroundImage.scale.set(2);
+
 				this.game.physics.startSystem(Phaser.Physics.P2JS);
 				this.game.physics.p2.restitution = 0.8;
 
@@ -95,7 +99,7 @@ RapidPrototyping.GameState.prototype.create = function() {
       			for(var x = 0; x < this.game.width; x += 32) {
           		// Creating multiple ground blocks, and enabling physics on each of them.
           			var groundBlock = this.game.add.sprite(x, this.game.height - 32, 'ground');
-
+          			groundBlock.scale.set(1.3);
           			this.game.physics.p2.enable(groundBlock);
           			groundBlock.body.kinematic = true;
 	          		groundBlock.body.immovable = true;
@@ -110,7 +114,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.player.anchor.setTo(0.5,0.5);
 				this.player.angle=0;
 				this.player.x= 800;
-				this.player.y = 800;
+				this.player.y = 850;
 				this.player.scale.set(1);
 				this.player.animations.add('idle',[0,1],2, true);
 				//this.player.animations.add('left', [2,3], 2, true);
@@ -171,20 +175,24 @@ RapidPrototyping.GameState.prototype.create = function() {
                 this.person.body.velocity.x = 90;
                 this.person.body.velocity.y = -100;
 
+                
                 this.person.body.setCollisionGroup(this.personCollisionGroup);
                 this.person.body.collides([this.playerCollisionGroup, this.towerCollisionGroup,this.ambulanceCollisionGroup,this.helicopterCollisionGroup]);
                 this.person.body.collides(this.groundCollisionGroup, null,this);
                 this.person.body.collides(this.balloonCollisionGroup, hitBalloon,this);
                 this.person.body.collides(this.ambulanceCollisionGroup,null,this);
                 this.person.body.collides(this.helicopterCollisionGroup,null,this);
-                
+                this.person.body.collides(this.personCollisionGroup,null,this);
+                this.groupPerson.add(this.person);
+
+
 				//anim =this.person.animations.add('anim',[1,2,3,4,5,6,7,8],8,true);
 				//anim.enableUpdate=true;
 
 				this.ambulance = game.add.sprite(0,0,'ambulance',1);
 				this.ambulance.enableBody=true;
 				this.ambulance.x=-200;
-				this.ambulance.y=800;
+				this.ambulance.y=8350;
 				this.game.physics.p2.enable(this.ambulance,true);
  				this.ambulance.body.collideWorldBounds = true;
  				this.ambulance.body.kinematic = true;
@@ -279,11 +287,12 @@ RapidPrototyping.GameState.prototype.create = function() {
 				//adding timers
 				this.game.time.events.loop(Phaser.Timer.SECOND*20, spawnAmbulance, this);
 				this.game.time.events.loop(Phaser.Timer.SECOND*45,	spawnHelicopter,this);
+				this.game.time.events.loop(Phaser.Timer.SECOND * 12, makeNewPerson, this);
 
-				this.livesText = this.game.add.text(10,10, "LIVES: 3");
+				this.livesText = this.game.add.text(10,10, "LIVES: 10");
 				this.livesText.anchor.setTo(0, 0);
 				//adding text to screen
-				livesLeft = 3;	
+				livesLeft = 30;	
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
 				music.volume=0.3;
@@ -293,7 +302,7 @@ RapidPrototyping.GameState.prototype.create = function() {
  				console.log(this.player.body.debug);
 
 				//Activate for more people!
-				//.game.time.events.add(Phaser.Timer.SECOND * 10, makeNewPerson, this);
+				
  	//console.log(this.person.body.debug);
 };
 
@@ -324,8 +333,12 @@ function makeNewPerson()
     this.person.body.velocity.x = 90;
     this.person.body.velocity.y = -100;
     this.person.body.setCollisionGroup(this.personCollisionGroup);
-    this.person.body.collides([this.playerCollisionGroup, this.towerCollisionGroup]);
-    this.person.body.collides(this.groundCollisionGroup, null, this);
+    this.person.body.collides([this.playerCollisionGroup, this.towerCollisionGroup,this.ambulanceCollisionGroup,this.helicopterCollisionGroup]);
+    this.person.body.collides(this.groundCollisionGroup, null,this);
+    this.person.body.collides(this.balloonCollisionGroup, hitBalloon,this);
+    this.person.body.collides(this.ambulanceCollisionGroup,null,this);
+    this.person.body.collides(this.helicopterCollisionGroup,null,this);
+    this.person.body.collides(this.personCollisionGroup,null,this);
     this.person.body.collides(this.balloonCollisionGroup, hitBalloon, this);
 
 	this.groupPerson.add(this.person);
