@@ -58,7 +58,7 @@ RapidPrototyping.GameState.prototype.preload = function() {
 // add person object sprite
   		  this.game.load.spritesheet('personObjectInAir','Content/Images/SpriteSheets/Peeps/B_Man_In_Air.png.',80,80,4); 
   		  this.game.load.spritesheet('personObjectDead','Content/Images/SpriteSheets/Peeps/B_Man_Dead.png.',80,80,1);
-
+  		  this.game.load.spritesheet('personGhost', 'Content/Images/SpriteSheets/Peeps/Businessman_wings.png', 80,80, 7);
   		  this.game.load.spritesheet('Firefighters_Idle2_180x65', 'Content/Images/SpriteSheets/Firefighters/Firefighters_Idle2_180x65.png', 180, 65, 6);
 
   		  this.game.load.image('ground','Content/Images/ground.png');
@@ -83,7 +83,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 			  	this.backgroundImage.scale.set(2);
 
 				this.game.physics.startSystem(Phaser.Physics.P2JS);
-				this.game.physics.p2.restitution = 0.8;
+				this.game.physics.p2.restitution = 1;
 
 
 				this.playerCollisionGroup = game.physics.p2.createCollisionGroup();
@@ -289,7 +289,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				//adding timers
 				this.game.time.events.loop(Phaser.Timer.SECOND*20, spawnAmbulance, this);
 				this.game.time.events.loop(Phaser.Timer.SECOND*45,	spawnHelicopter,this);
-				this.game.time.events.loop(Phaser.Timer.SECOND * 5, makeNewPerson, this);
+				this.game.time.events.loop(Phaser.Timer.SECOND*5, makeNewPerson, this);
 
 				this.livesText = this.game.add.text(10,10, "LIVES: 10");
 				this.livesText.anchor.setTo(0, 0);
@@ -307,33 +307,94 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 function loseLife(ground, person)
 {
-	/*
+	person.sprite.body.velocity.x = 0;
+	person.sprite.body.velocity.y = 0;
+	person.sprite.body.angle = 0;
+	person.sprite.body.kinematic = true;
+	person.sprite.body.angularVelocity = 0;
+	//person.sprite.body.x = 300;
+	person.sprite.body.y = 850;
 	person.sprite.body.enable = false;
-	person.sprite.body.x = 300;
-	person.sprite.body.y = 200;
-	person.sprite.body.enable = true;
+	this.game.time.events.add(Phaser.Timer.SECOND * 20,removePerson, this, person.sprite);
+	/*person.sprite.body.enable = true;
 	person.sprite.body.velocity.x = 90;
 	person.sprite.body.velocity.y = -200;*/
-	person.sprite.kill();
+	//person.sprite.kill();
+	person.sprite.loadTexture('personObjectDead', 0);
+
+	this.ghost = game.add.sprite(0,0,'personGhost', 1);
+	this.person.enableBody = true;
+	this.ghost.x = person.x;
+	this.ghost.y = person.y;
+	this.game.physics.enable(this.ghost,Phaser.Physics.P2JS);
+	this.ghost.animations.add('inair',[0,1,2,3,4,5,6],7, true);
+	this.ghost.animations.play('inair');
+	this.ghost.body.velocity.y = -100;
+	this.ghost.alpha = 0.2;
+	this.ghost.body.kinematic = true;
 	livesLeft = livesLeft-1;
 	if(livesLeft==0)
 		playerDead();
+}
+
+function removePerson(person)
+{
+	person.kill();
 }
 
 function makeNewPerson()
 {
 	this.person= game.add.sprite(0,0,'personObjectInAir',1);
 	this.person.enableBody = true;
-	this.person.x= 300;
-	this.person.y = 200;
 	this.person.scale.set(1);
 	this.person.anchor.setTo(0.5,0.5);
+	
+	var randomNumber = game.rnd.integerInRange(0,3);
+	if (randomNumber == 0)
+	{	
+	this.person.x= 400;
+	this.person.y = 200;
+	}
+	else if (randomNumber == 1)
+	{	
+	this.person.x= 400;
+	this.person.y = 400;
+	}
+	else if (randomNumber == 2)
+	{	
+	this.person.x= 1500;
+	this.person.y = 200;
+	}
+	else if (randomNumber == 3)
+	{	
+	this.person.x= 1500;
+	this.person.y = 400;
+	}
 	this.game.physics.enable(this.person,Phaser.Physics.P2JS);
 	this.person.animations.add('inair',[0,1,2,3],4, true);
-	this.person.animations.play('inair');	
-  	this.person.body.collideWorldBounds = true;
-    this.person.body.velocity.x = 90;
+	this.person.animations.play('inair');
+	if (randomNumber == 0)
+	{	
+	this.person.body.velocity.x = 90;
     this.person.body.velocity.y = -100;
+	}
+	else if (randomNumber == 1)
+	{	
+	this.person.body.velocity.x = 90;
+    this.person.body.velocity.y = -100;
+	}
+	else if (randomNumber == 2)
+	{
+	this.person.body.velocity.x = -90;
+    this.person.body.velocity.y = 100;
+	}
+	else if (randomNumber == 3)
+	{	
+	this.person.body.velocity.x = -90;
+    this.person.body.velocity.y = 100;
+	}
+
+  	this.person.body.collideWorldBounds = true;
     this.person.body.setCollisionGroup(this.personCollisionGroup);
     this.person.body.collides([this.playerCollisionGroup, this.towerCollisionGroup,this.ambulanceCollisionGroup,this.helicopterCollisionGroup]);
     this.person.body.collides(this.groundCollisionGroup, null,this);
