@@ -149,52 +149,46 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 				this.fire = game.add.sprite(0,0, 'fire', 1);
 				this.fire.x=1610;
-				this.fire.y=695;
-				this.fire.scale.set(0.5);
+				this.fire.y=210;
+				this.fire.scale.set(0.9);
 				this.fire.animations.add('flameOn',[0,1,2,3,5],6, true);
-				this.fire.animations.play('flameOn', 5, true);	
+				this.fire.animations.play('flameOn', 4, true);	
 
 				this.fire1 = game.add.sprite(0,0, 'fire', 1);
 				this.fire1.x=20;
 				this.fire1.y=583;
-				this.fire1.scale.set(0.5);
+				this.fire1.scale.set(0.4);
 				this.fire1.animations.add('flameOn',[0,1,2,3,5],6, true);
-				this.fire1.animations.play('flameOn', 5, true);	
+				this.fire1.animations.play('flameOn', 10, true);	
 
 				this.fire2 = game.add.sprite(0,0, 'fire', 1);
 				this.fire2.x=110;
 				this.fire2.y=160;
 				this.fire2.scale.set(0.5);
 				this.fire2.animations.add('flameOn',[0,1,2,3,5],6, true);
-				this.fire2.animations.play('flameOn', 5, true);	
+				this.fire2.animations.play('flameOn', 3, true);	
 
 				this.fire3 = game.add.sprite(0,0, 'fire', 1);
-				this.fire3.x=1700;
+				this.fire3.x=1710;
 				this.fire3.y=50;
-				this.fire3.scale.set(0.5);
+				this.fire3.scale.set(0.7);
 				this.fire3.animations.add('flameOn',[0,1,2,3,5],6, true);
 				this.fire3.animations.play('flameOn', 5, true);	
 
 				this.fire4 = game.add.sprite(0,0, 'fire', 1);
-				this.fire4.x=600;
-				this.fire4.y=760;
-				this.fire4.scale.set(0.5);
+				this.fire4.x=200;
+				this.fire4.y=290;
+				this.fire4.scale.set(0.8);
 				this.fire4.animations.add('flameOn',[0,1,2,3,5],6, true);
-				this.fire4.animations.play('flameOn', 5, true);	
+				this.fire4.animations.play('flameOn', 6, true);	
 
-				this.fire4 = game.add.sprite(0,0, 'fire', 1);
-				this.fire4.x=600;
-				this.fire4.y=760;
-				this.fire4.scale.set(0.5);
-				this.fire4.animations.add('flameOn',[0,1,2,3,5],6, true);
-				this.fire4.animations.play('flameOn', 5, true);	
+				this.fire5 = game.add.sprite(0,0, 'fire', 1);
+				this.fire5.x=1528;
+				this.fire5.y=583;
+				this.fire5.scale.set(0.4);
+				this.fire5.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire5.animations.play('flameOn', 8, true);	
 
-				this.fire4 = game.add.sprite(0,0, 'fire', 1);
-				this.fire4.x=600;
-				this.fire4.y=760;
-				this.fire4.scale.set(0.5);
-				this.fire4.animations.add('flameOn',[0,1,2,3,5],6, true);
-				this.fire4.animations.play('flameOn', 5, true);	
 
 				this.StreetLight = this.game.add.sprite(0,0,'StreetLight',1);
 	 			this.StreetLight.x=1300;
