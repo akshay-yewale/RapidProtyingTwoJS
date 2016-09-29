@@ -71,9 +71,14 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		  this.game.load.spritesheet('personObjectDead','Content/Images/SpriteSheets/Peeps/B_Man_Dead.png.',80,80,1);
   		  this.game.load.spritesheet('personGhost', 'Content/Images/SpriteSheets/Peeps/Businessman_wings.png', 80,80, 7);
 
+  		  this.game.load.spritesheet('ladyObjectInAir','Content/Images/SpriteSheets/Peeps/Woman_In_Air.png.',80,80,4); 
+  		  this.game.load.spritesheet('ladyObjectDead','Content/Images/SpriteSheets/Peeps/Woman_Dead.png.',80,80,1);
+  		  this.game.load.spritesheet('ladyGhost', 'Content/Images/SpriteSheets/Peeps/Woman_Fly.png', 80,80, 7);
+
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
 
+  		  this.game.load.spritesheet('fire','Content/Images/SpriteSheets/Flame_sprite sheet.png', 256,256, 6)
 
   		  this.game.load.image('tower', 'Content/Images/Buildings/Apartment.png');
   		  this.game.load.image('tower2', 'Content/Images/Buildings/ApartmentRed.png');
@@ -116,12 +121,14 @@ RapidPrototyping.GameState.prototype.create = function() {
  				console.log("Adding GameState creating tower1");
       			this.tower = this.game.add.sprite(0,0,'tower',1);
       			this.tower.enableBody = true;
-      			this.tower.x= 100;
+      			this.tower.x= 180;
 				this.tower.y = 450;
-      			this.game.physics.p2.enable(this.tower);
+      			this.game.physics.p2.enable(this.tower, false);
 				this.tower.anchor.setTo(0.5,0.5);
 				this.tower.angle=0;
 				this.tower.body.kinematic = true;
+				this.tower.body.clearShapes();
+				this.tower.body.setRectangle(200, 2000, 100, 0);
 				this.tower.body.setCollisionGroup(this.towerCollisionGroup);
 				this.tower.body.collides([this.personCollisionGroup, this.playerCollisionGroup]);
 
@@ -132,10 +139,62 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.tower2.anchor.setTo(0.5,0.5);
 
 				this.tower2.angle=0;	
-				this.game.physics.p2.enable(this.tower2);
+				this.game.physics.p2.enable(this.tower2, false);
 				this.tower2.body.kinematic = true;
+				this.tower2.body.clearShapes();
+				this.tower2.body.setRectangle(200, 2000, -50, 0);
 				this.tower2.body.setCollisionGroup(this.towerCollisionGroup);
 				this.tower2.body.collides([this.personCollisionGroup, this.playerCollisionGroup]);
+
+
+				this.fire = game.add.sprite(0,0, 'fire', 1);
+				this.fire.x=1610;
+				this.fire.y=695;
+				this.fire.scale.set(0.5);
+				this.fire.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire.animations.play('flameOn', 5, true);	
+
+				this.fire1 = game.add.sprite(0,0, 'fire', 1);
+				this.fire1.x=20;
+				this.fire1.y=583;
+				this.fire1.scale.set(0.5);
+				this.fire1.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire1.animations.play('flameOn', 5, true);	
+
+				this.fire2 = game.add.sprite(0,0, 'fire', 1);
+				this.fire2.x=110;
+				this.fire2.y=160;
+				this.fire2.scale.set(0.5);
+				this.fire2.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire2.animations.play('flameOn', 5, true);	
+
+				this.fire3 = game.add.sprite(0,0, 'fire', 1);
+				this.fire3.x=1700;
+				this.fire3.y=50;
+				this.fire3.scale.set(0.5);
+				this.fire3.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire3.animations.play('flameOn', 5, true);	
+
+				this.fire4 = game.add.sprite(0,0, 'fire', 1);
+				this.fire4.x=600;
+				this.fire4.y=760;
+				this.fire4.scale.set(0.5);
+				this.fire4.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire4.animations.play('flameOn', 5, true);	
+
+				this.fire4 = game.add.sprite(0,0, 'fire', 1);
+				this.fire4.x=600;
+				this.fire4.y=760;
+				this.fire4.scale.set(0.5);
+				this.fire4.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire4.animations.play('flameOn', 5, true);	
+
+				this.fire4 = game.add.sprite(0,0, 'fire', 1);
+				this.fire4.x=600;
+				this.fire4.y=760;
+				this.fire4.scale.set(0.5);
+				this.fire4.animations.add('flameOn',[0,1,2,3,5],6, true);
+				this.fire4.animations.play('flameOn', 5, true);	
 
 				this.StreetLight = this.game.add.sprite(0,0,'StreetLight',1);
 	 			this.StreetLight.x=1300;
@@ -186,7 +245,7 @@ RapidPrototyping.GameState.prototype.create = function() {
           				Phaser.Keyboard.LEFT,
           				Phaser.Keyboard.RIGHT
           				]);
-				this.game.physics.p2.enable(this.player, true);
+				this.game.physics.p2.enable(this.player, false);
  				this.game.physics.p2.gravity.y = this.GRAVITY*2;
 
 
@@ -288,7 +347,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.scoreText = this.game.add.text(1650,10, "Score:" + this.score)
 				this.livesText.anchor.setTo(0, 0);
 				//adding text to screen
-				livesLeft = 30;	
+				livesLeft = 3;	
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
 				music.volume=0.2;
@@ -327,9 +386,18 @@ function loseLife(ground, person)
 	person.sprite.body.velocity.x = 90;
 	person.sprite.body.velocity.y = -200;*/
 	//person.sprite.kill();
-	person.sprite.loadTexture('personObjectDead', 0);
+	if (person.sprite.key == 'personObjectInAir')
+	{
+		person.sprite.loadTexture('personObjectDead', 0);
+		this.ghost = game.add.sprite(0,0,'personGhost', 1);
+	}
+	else if (person.sprite.key == 'ladyObjectInAir')
+	{
+		person.sprite.loadTexture('ladyObjectDead', 0);
+		this.ghost = game.add.sprite(0,0,'ladyGhost', 1);
+	}
 
-	this.ghost = game.add.sprite(0,0,'personGhost', 1);
+	
 	this.person.enableBody = true;
 	this.ghost.x = person.x;
 	this.ghost.y = person.y;
@@ -351,7 +419,11 @@ function removePerson(person)
 
 function makeNewPerson()
 {
-	this.person= game.add.sprite(0,0,'personObjectInAir',1);
+	var anotherRandomNumber = game.rnd.integerInRange(0,1);
+	if (anotherRandomNumber == 0)
+		this.person= game.add.sprite(0,0,'personObjectInAir',1);
+	else if (anotherRandomNumber == 1)
+		this.person= game.add.sprite(0,0,'ladyObjectInAir',1);
 	this.person.enableBody = true;
 	this.person.scale.set(1);
 	this.person.anchor.setTo(0.5,0.5);
