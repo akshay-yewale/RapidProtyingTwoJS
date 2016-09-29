@@ -69,13 +69,19 @@ RapidPrototyping.GameState.prototype.preload = function() {
 
   		  this.game.load.image('ground','Content/Images/ground.png');
   		//  this.game.load.atlas('person', 'Content/Images/personObject.png', 'Content/Images/fallingman.json'); 
-  		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
+  		  
   		  this.game.load.image('balloon','Content/Images/Balloon.png');
   		  this.game.load.image('tower', 'Content/Images/Buildings/Apartment.png');
   		  this.game.load.image('tower2', 'Content/Images/Buildings/ApartmentRed.png');
-  		  this.game.load.spritesheet('ambulance','Content/Images/SpriteSheets/Ambulance/ambulance.png',256,256,10);
+  		  this.game.load.spritesheet('ambulance','Content/Images/SpriteSheets/Ambulance/ambulance.png',256,256,14);
   		  this.game.load.spritesheet('helicopter','Content/Images/SpriteSheets/Helicopter/helicopter.png',256,256,1);
-  		  //this.game.load.spritesheet('wingsOfFreedom','');
+
+
+
+  		  // loading sounds
+  		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
+  		  this.game.load.audio("helicopterSound","Content/Sound/helicopter.wav");
+
   };
 
 RapidPrototyping.GameState.prototype.create = function() {
@@ -195,7 +201,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 			    this.person.body.setCollisionGroup(this.personCollisionGroup);
 			    this.person.body.collides(this.groundCollisionGroup, null,this);
 			    this.person.body.collides(this.balloonCollisionGroup, hitBalloon,this);
-			    this.person.body.collides(this.ambulanceCollisionGroup,BouncePoints,this);
+			    this.person.body.collides(this.ambulanceCollisionGroup,null,this);
 			    this.person.body.collides(this.helicopterCollisionGroup,BouncePoints,this);
 			    this.person.body.collides(this.personCollisionGroup,BouncePoints,this);
 			    this.person.body.collides(this.balloonCollisionGroup, hitBalloon, this);
@@ -211,17 +217,21 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.ambulance.enableBody=true;
 				this.ambulance.x=-200;
 				this.ambulance.y=850;
-				this.game.physics.p2.enable(this.ambulance,true);
+				this.game.physics.p2.enable(this.ambulance,false);
  				this.ambulance.body.collideWorldBounds = true;
  				this.ambulance.body.kinematic = true;
 				this.ambulance.body.drag = 0.1;
 				this.ambulance.body.velocity.x =100;
+				this.ambulance.body.clearShapes();
 				this.ambulance.body.setRectangle(200, 200, 0, 10);
 				this.ambulance.body.setCollisionGroup(this.ambulanceCollisionGroup);
 				//this.ambulance.body.collides(playerCollisionGroup,null,this);
 				this.ambulance.body.collides(this.personCollisionGroup,AddPersonToAmbulance,this);
 				personInAmbulance=0;
 				ambulanceLeftToRight=true;
+
+				this.ambulance.animations.add('ambulanceNoPerson',[0,1,2,3],6, true);
+				this.ambulance.animations.play('ambulanceNoPerson');
 
 				this.helicopter = game.add.sprite(0,0,'helicopter',1);
 				this.helicopter.enableBody=true;
@@ -246,8 +256,6 @@ RapidPrototyping.GameState.prototype.create = function() {
 
 
 				// adding wings of freedom
-
-
             	this.group1 = this.game.add.group();
             	this.group2 = this.game.add.group();
 				this.group3 = this.game.add.group();
@@ -301,8 +309,8 @@ RapidPrototyping.GameState.prototype.create = function() {
 	 			}
 
 				//adding timers
-				this.game.time.events.loop(Phaser.Timer.SECOND*10, spawnAmbulance, this);
-				this.game.time.events.loop(Phaser.Timer.SECOND*85,	spawnHelicopter,this);
+				this.game.time.events.loop(Phaser.Timer.SECOND*20, spawnAmbulance, this);
+				this.game.time.events.add(Phaser.Timer.SECOND*50,spawnHelicopter,this);
 				this.game.time.events.loop(Phaser.Timer.SECOND*5, makeNewPerson, this);
 
 				this.score = 0;
@@ -313,7 +321,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				livesLeft = 300;	
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
-				music.volume=0.3;
+				music.volume=0.2;
 				music.play();
 
 				game.physics.p2.setImpactEvents(true);
@@ -414,7 +422,7 @@ function makeNewPerson()
     this.person.body.setCollisionGroup(this.personCollisionGroup);
     this.person.body.collides(this.groundCollisionGroup, null,this);
     this.person.body.collides(this.balloonCollisionGroup, hitBalloon,this);
-    this.person.body.collides(this.ambulanceCollisionGroup,BouncePoints,this);
+    this.person.body.collides(this.ambulanceCollisionGroup,null,this);
     this.person.body.collides(this.helicopterCollisionGroup,BouncePoints,this);
     this.person.body.collides(this.personCollisionGroup,BouncePoints,this);
     this.person.body.collides(this.balloonCollisionGroup, hitBalloon, this);
@@ -444,6 +452,11 @@ function spawnHelicopter(){
 	personInHelicopter=0;
 	heliOnScene=true;
 	timeoutHelicopter=15000;
+
+	heliMusic= game.add.audio("helicopterSound");
+				heliMusic.loop = false;
+				heliMusic.volume=0.4;
+				heliMusic.play();
 	
 }
 
@@ -476,24 +489,43 @@ function spawnAmbulance(){
 
 	}
 	personInAmbulance=0;
-	this.ambulance.animations.add('ambulance',[0,1,2,3],6, true);
-	this.ambulance.animations.play('ambulance');
+	this.ambulance.animations.add('ambulanceNoPerson',[0,1,2,3],4, true);
+	this.ambulance.animations.play('ambulanceNoPerson');
 	
 }
 
 function AddPersonToAmbulance(ambulance, person)
 {
-	if(personInAmbulance==3)
+	
+	if(personInAmbulance<=3)
 	{
-		personInAmbulance++;
-		person.sprite.body.enable = false;
-		person.sprite.body.x = 300;
-		person.sprite.body.y = 200;
-		person.sprite.body.enable = true;
-		person.sprite.body.velocity.x = 90;
-		person.sprite.body.velocity.y = -200;
 
+		personInAmbulance++;
+	//	alert("entered ambulance");
+		this.score += 1;
+		person.sprite.body.enable = false;
+		person.sprite.kill();
 		this.score += 50;
+	this.ambulance.animations.stop(null,this);
+
+		if(ambulance==1)
+		{
+			this.ambulance.animations.add('ambulance11person',[4,5],3,true);
+			this.ambulance.animations.play('ambulance11person');
+		}
+		else if(personInAmbulance==2){
+			
+			this.ambulance.animations.add('ambulance1person',[4,5],3,true);
+			this.ambulance.animations.play('ambulance1person');
+		}
+		else if(personInAmbulance==3){
+			this.ambulance.animations.add('ambulance2person',[6,7],3,true);
+			this.ambulance.animations.play('ambulance2person');
+		}
+		else if (personInAmbulance==4){
+			this.ambulance.animations.add('ambulance3person',[8,9,10,11],6,true);
+			this.ambulance.animations.play('ambulance3person');
+		}
 	}
 	else
 	{
@@ -504,7 +536,7 @@ function AddPersonToAmbulance(ambulance, person)
 
 function BouncePoints(first, second)
 {
-	this.score += 1;
+	this.score+=50;
 }
 
 function AddPersonToHelicopter(helicopter, person)
@@ -513,11 +545,7 @@ function AddPersonToHelicopter(helicopter, person)
 	{
 		personInHelicopter++;
 		person.sprite.body.enable = false;
-		person.sprite.body.x = 300;
-		person.sprite.body.y = 200;
-		person.sprite.body.enable = true;
-		person.sprite.body.velocity.x = 90;
-		person.sprite.body.velocity.y = -200;
+		person.sprite.kill();
 		this.score += 50;
 	}
 	else
