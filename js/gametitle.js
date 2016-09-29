@@ -22,8 +22,8 @@ RapidPrototyping.GameTitle.prototype = {
 		this.fireRescueLogo.x = 600;
 		this.fireRescueLogo.y = 50;
 		this.fireRescueLogo.scale.set(2);
-  		var playButton = this.add.button(900,720,"playbutton",this.playTheGame,this);
-
+  		var playButton = this.add.button(880,740,"playbutton",this.playTheGame,this);
+  		playButton.scale.setTo(2.5, 2.5);
 		playButton.anchor.setTo(0.5,0.5);
 
 	},
