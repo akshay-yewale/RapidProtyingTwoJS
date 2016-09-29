@@ -91,6 +91,10 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.m4a");
   		  this.game.load.audio("helicopterSound","Content/Sound/helicopter.wav");
   		  this.game.load.audio("ambulanceSound","Content/Sound/ambulance.wav");
+  		  this.game.load.audio("ladyDeath","Content/Sound/ladydeath.wav");
+  		  this.game.load.audio("personDeath","Content/Sound/personObjectDead.mp3");
+  		  
+
 
   };
 
@@ -347,7 +351,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.scoreText = this.game.add.text(1650,10, "Score:" + this.score)
 				this.livesText.anchor.setTo(0, 0);
 				//adding text to screen
-				livesLeft = 3;	
+				livesLeft = 20;	
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
 				music.volume=0.2;
@@ -362,6 +366,17 @@ RapidPrototyping.GameState.prototype.create = function() {
 				ambulanceMusic.loop=false;
 				ambulanceMusic.volume=0.2;
 				ambulanceMusic.play();
+
+
+				deadPersonMusic= game.add.audio("personDeath");
+				deadPersonMusic.loop = false;
+				deadPersonMusic.volume=0.32;
+
+				deadLadyMusic= game.add.audio("ladyDeath");
+				deadLadyMusic.loop = false;
+				deadLadyMusic.volume=0.32;
+
+
 
 				game.physics.p2.setImpactEvents(true);
  				console.log(this.player.body.debug);
@@ -388,11 +403,14 @@ function loseLife(ground, person)
 	//person.sprite.kill();
 	if (person.sprite.key == 'personObjectInAir')
 	{
+		deadPersonMusic.play();
 		person.sprite.loadTexture('personObjectDead', 0);
 		this.ghost = game.add.sprite(0,0,'personGhost', 1);
+
 	}
 	else if (person.sprite.key == 'ladyObjectInAir')
 	{
+		deadLadyMusic.play();
 		person.sprite.loadTexture('ladyObjectDead', 0);
 		this.ghost = game.add.sprite(0,0,'ladyGhost', 1);
 	}
@@ -549,15 +567,13 @@ function spawnAmbulance(){
 
 		ambulanceMusic = game.add.audio("ambulanceSound");
 				ambulanceMusic.loop=false;
-				ambulanceMusic.volume=0.2;
+				ambulanceMusic.volume=0.1;
 				ambulanceMusic.play();
 	
 }
 
 function AddPersonToAmbulance(ambulance, person)
 {
-
-
 
 	if(personInAmbulance<4)
 	{
