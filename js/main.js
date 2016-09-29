@@ -341,7 +341,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				this.scoreText = this.game.add.text(1650,10, "Score:" + this.score)
 				this.livesText.anchor.setTo(0, 0);
 				//adding text to screen
-				livesLeft = 3;	
+				livesLeft = 5;	
 				music= game.add.audio("backgrdSound");
 				music.loop = true;
 				music.volume=0.2;
