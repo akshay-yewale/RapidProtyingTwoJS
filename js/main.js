@@ -74,7 +74,7 @@ RapidPrototyping.GameState.prototype.preload = function() {
   		  this.game.load.image('tower', 'Content/Images/Buildings/Apartment.png');
   		  this.game.load.image('tower2', 'Content/Images/Buildings/ApartmentRed.png');
   		  this.game.load.spritesheet('ambulance','Content/Images/SpriteSheets/Ambulance/ambulance.png',256,256,14);
-  		  this.game.load.spritesheet('helicopter','Content/Images/SpriteSheets/Helicopter/helicopter.png',256,256,1);
+  		  this.game.load.spritesheet('helicopter','Content/Images/SpriteSheets/Helicopter/Helicopter256.png',256,128,8);
 
 
 
@@ -250,6 +250,9 @@ RapidPrototyping.GameState.prototype.create = function() {
 				personInHelicopter=0;
 				heliOnScene=true;
 				timeoutHelicopter=15000;
+				this.helicopter.animations.add('helicopinAir',[0,1,2,3],4, true);
+				this.helicopter.animations.play('helicopinAir', 5, true);		
+
 
 				personAlive = true;
 				rotatingSpeed = 10;
@@ -447,6 +450,7 @@ function hitBalloon(person, balloon)
 
 
 function spawnHelicopter(){
+	this.helicopter.animations.stop(null,this);
 	this.helicopter.body.x=-400;
 	this.helicopter.body.velocity.x=200;
 	personInHelicopter=0;
@@ -457,6 +461,9 @@ function spawnHelicopter(){
 				heliMusic.loop = false;
 				heliMusic.volume=0.4;
 				heliMusic.play();
+
+	this.helicopter.animations.add('helicopinAir',[0,1,2,3],4, true);
+				this.helicopter.animations.play('helicopinAir', 5, true);		
 	
 }
 
@@ -547,6 +554,10 @@ function AddPersonToHelicopter(helicopter, person)
 		person.sprite.body.enable = false;
 		person.sprite.kill();
 		this.score += 50;
+		this.helicopter.animations.stop(null,this);
+		this.helicopter.animations.add('helicopPersoninAir',[4,5,6,7],4, true);
+		this.helicopter.animations.play('helicopPersoninAir', 5, true);		
+	
 	}
 	else
 	{
