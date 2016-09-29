@@ -83,8 +83,9 @@ RapidPrototyping.GameState.prototype.preload = function() {
 
 
   		  // loading sounds
-  		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.ogg");
+  		  this.game.load.audio("backgrdSound","Content/Sound/bckgrdsound.m4a");
   		  this.game.load.audio("helicopterSound","Content/Sound/helicopter.wav");
+  		  this.game.load.audio("ambulanceSound","Content/Sound/ambulance.wav");
 
   };
 
@@ -278,7 +279,7 @@ RapidPrototyping.GameState.prototype.create = function() {
 				personAlive = true;
 				rotatingSpeed = 10;
 				//adding timers
-				this.game.time.events.loop(Phaser.Timer.SECOND*20, spawnAmbulance, this);
+				this.game.time.events.loop(Phaser.Timer.SECOND*40, spawnAmbulance, this);
 				this.game.time.events.add(Phaser.Timer.SECOND*50,spawnHelicopter,this);
 				this.game.time.events.loop(Phaser.Timer.SECOND*5, makeNewPerson, this);
 
@@ -292,6 +293,16 @@ RapidPrototyping.GameState.prototype.create = function() {
 				music.loop = true;
 				music.volume=0.2;
 				music.play();
+
+				heliMusic= game.add.audio("helicopterSound");
+				heliMusic.loop = false;
+				heliMusic.volume=0.4;
+				heliMusic.play();
+
+				ambulanceMusic = game.add.audio("ambulanceSound");
+				ambulanceMusic.loop=false;
+				ambulanceMusic.volume=0.2;
+				ambulanceMusic.play();
 
 				game.physics.p2.setImpactEvents(true);
  				console.log(this.player.body.debug);
@@ -463,6 +474,11 @@ function spawnAmbulance(){
 	personInAmbulance=0;
 	this.ambulance.animations.add('ambulanceNoPerson',[0,1,2,3],4, true);
 	this.ambulance.animations.play('ambulanceNoPerson');
+
+		ambulanceMusic = game.add.audio("ambulanceSound");
+				ambulanceMusic.loop=false;
+				ambulanceMusic.volume=0.2;
+				ambulanceMusic.play();
 	
 }
 
@@ -529,7 +545,6 @@ function AddPersonToHelicopter(helicopter, person)
 	else
 	{
 		
-
 	}	
 }
 
